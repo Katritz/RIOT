@@ -145,3 +145,6 @@ endif
 ifneq (,$(filter apa102,$(USEMODULE)))
   USEMODULE_INCLUDES += $(RIOTBASE)/drivers/apa102/include
 endif
+ifneq (,$(filter ezo_ph,$(USEMODULE)))
+  USEMODULE_INCLUDES += $(RIOTBASE)/drivers/ezo_ph/include
+endif

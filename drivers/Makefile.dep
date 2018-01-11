@@ -100,6 +100,10 @@ ifneq (,$(filter ethos,$(USEMODULE)))
   USEMODULE += tsrb
 endif
 
+ifneq (,$(filter ezo_ph,$(USEMODULE)))
+  FEATURES_REQUIRED += periph_i2c
+endif
+
 ifneq (,$(filter hdc1000,$(USEMODULE)))
   USEMODULE += xtimer
   FEATURES_REQUIRED += periph_i2c
