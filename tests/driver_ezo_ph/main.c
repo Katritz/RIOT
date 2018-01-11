@@ -41,12 +41,13 @@
 #include "xtimer.h"
 #include "timex.h"
 
+
 int main(void)
 {
 
 	ezo_ph_t dev;
 	char ph[EZO_PH_VALUE_LENGTH] = "";
-	char data[15] = "";
+	//char data[15] = "";
 
 	//gitkraken
 
@@ -55,7 +56,7 @@ int main(void)
     puts("EZO pH sensor driver test application\n");
     printf("Initializing EZO_PH sensor at I2C_%i ... \n", ezo_ph_params[0].i2c);
     ezo_ph_init(&dev, ezo_ph_params);
-    ezo_ph_read(&dev, 10, EZO_PH_DEVICE_FIRMWARE, data);
+    //ezo_ph_read(&dev, EZO_PH_DEVICE_FIRMWARE, data, 15);
 	//ezo_ph_calibration(&dev, EZO_PH_CAL_ACT);
 
     ezo_ph_read_ph(&dev, ph);

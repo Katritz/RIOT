@@ -49,7 +49,6 @@
 
 int ezo_ph_init(ezo_ph_t *dev, const ezo_ph_params_t *params)
 {
-    char write[] = "i";
     char read[READ_BYTES_MAX];
     /* check parameters */
     assert(dev && params);
@@ -68,10 +67,10 @@ int ezo_ph_init(ezo_ph_t *dev, const ezo_ph_params_t *params)
 
     /* try if we can interact with the device by reading its firmware */
     i2c_acquire(BUS);
-    i2c_write_bytes(BUS, ADDR, write, sizeof(WRITE_BYTES_MAX-1));  
+    i2c_write_bytes(BUS, ADDR, EZO_PH_DEVICE_FIRMWARE, WRITE_BYTES_MAX);  
     /* wait for 300 us */
     xtimer_usleep(300*1000);
-    i2c_read_bytes(BUS, ADDR, read, sizeof(READ_BYTES_MAX-1));
+    i2c_read_bytes(BUS, ADDR, read, READ_BYTES_MAX);
     /* wait for 300 us */
     xtimer_usleep(300*1000);
 
@@ -115,12 +114,12 @@ int ezo_ph_write(const ezo_ph_t *dev, char *write)
     xtimer_usleep(900*1000);
     i2c_release(BUS);
 
-    printf("Command: 0x%x, %s\n", *write, write);
+    //printf("Command: 0x%x, %s\n", *write, write);
 
     return EZO_PH_OK;
 }
 
-int ezo_ph_read(const ezo_ph_t *dev, uint8_t bytes, char *write, char *data)
+int ezo_ph_read(const ezo_ph_t *dev, char *write, char *data, uint8_t bytes)
 {
     ezo_ph_write(dev, write);
 
@@ -144,7 +143,7 @@ int ezo_ph_read(const ezo_ph_t *dev, uint8_t bytes, char *write, char *data)
     }else if (data[0] == 1)
     {
         memmove(data, data+1, strlen(data)); //remove first character ("1" = start of heading)
-        printf("Datenbyte: %s\n",  data);
+        //printf("%s\n",  data);
         return EZO_PH_OK;
     }else{
         puts("ERROR!");   
@@ -157,21 +156,20 @@ int ezo_ph_read(const ezo_ph_t *dev, uint8_t bytes, char *write, char *data)
 
 int ezo_ph_read_ph(const ezo_ph_t *dev, char *ph)
 {
-    printf("pH Value:\n");
-    ezo_ph_read(dev, EZO_PH_VALUE_LENGTH, EZO_PH_GET_VALUE, ph);
+    //printf("pH Value:\n");
+    ezo_ph_read(dev, EZO_PH_GET_VALUE, ph, EZO_PH_VALUE_LENGTH);
     return EZO_PH_OK;
 }
 
 int ezo_ph_calibration(const ezo_ph_t *dev, char *cal_type)
 {
+    char *act_cal = "";
     printf("Calibration:\n");
     if(EZO_PH_CAL_ACT){
-        char *act_cal = "";
-        ezo_ph_read(dev, READ_BYTES_MAX, cal_type, act_cal);
-        printf("Actual Calibration: %s\n", act_cal);
-    }else{
         ezo_ph_write(dev, cal_type);
     }
+    ezo_ph_read(dev, cal_type, act_cal, READ_BYTES_MAX);
+        printf("Actual Calibration: %s\n", act_cal);
     
     return EZO_PH_OK;
 }

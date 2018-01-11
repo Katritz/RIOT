@@ -26,6 +26,7 @@
 #include <stdbool.h>
 #include "periph/i2c.h"
 
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -133,7 +134,7 @@ int ezo_ph_write(const ezo_ph_t *dev, char *write);
  * @return                  0 on success
  * @return                  -1 on error
  */
-int ezo_ph_read(const ezo_ph_t *dev, uint8_t bytes, char *command, char *data);
+int ezo_ph_read(const ezo_ph_t *dev, char *command, char *data, uint8_t bytes);
 
 
 /**
